@@ -216,11 +216,15 @@ proc fromJson*[T: ref object or object](_: type T, json: JsonNode): ?!T =
     if not skip:
       if isOptionalValue:
         let jsonVal = json{opts.key}
-        value = ? typeof(value).fromJson(jsonVal)
+        without parsed =? typeof(value).fromJson(jsonVal), e:
+          return failure(e)
+        value = parsed
 
       # not Option[T]
       elif opts.key in json and jsonVal =? json{opts.key}.catch and not jsonVal.isNil:
-        value = ? typeof(value).fromJson(jsonVal)
+        without parsed =? typeof(value).fromJson(jsonVal), e:
+          return failure(e)
+        value = parsed
 
   success(res)
 

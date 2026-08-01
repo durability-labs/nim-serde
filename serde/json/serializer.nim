@@ -100,6 +100,7 @@ proc `%`*[T: object or ref object](obj: T): JsonNode =
       if opts.ignore:
         skip = true
     of Strict:
+      # required: Nim case on enum must cover all variants
       discard
 
     if not skip:
